@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>nursundetavto.shina — Каталог</title>
+  <style>
+    :root{
+      --bg:#0f0f11; --card:#151515; --muted:#bdbdbd; --accent:#ff6b35;
+      --glass: rgba(255,255,255,0.03); --radius:12px; --max-width:1100px;
+      --text:#fff;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:linear-gradient(180deg,#0a0a0b 0%, #0f0f11 100%); color:var(--text);
+      font-family: "Inter", Arial, sans-serif; -webkit-font-smoothing:antialiased;
+      line-height:1.4; padding-bottom:120px;
+    }
+    .light{
+      --bg: #f6f7fb; --card:#ffffff; --muted:#666; --accent:#ff6b35; --text:#111;
+      background: linear-gradient(180deg,#fff,#f6f7fb);
+    }
+    .wrap{max-width:var(--max-width);margin:18px auto;padding:0 16px;}
+    header{
+      display:flex;gap:12px;align-items:center;justify-content:space-between;
+      background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);
+      padding:14px;border-radius:12px;margin-bottom:14px;
+    }
+    .logo{font-weight:700;font-size:18px;display:flex;gap:12px;align-items:center;}
+    .phone{font-size:13px;color:var(--muted);font-weight:600}
+    .controls{display:flex;gap:8px;align-items:center;}
+    button, select, input[type="text"]{font-family:inherit;font-size:14px;border:0;outline:0;}
+    .lang button{background:transparent;color:var(--muted);padding:6px;border-radius:8px;cursor:pointer}
+    .menu button{background:var(--glass);padding:8px 12px;border-radius:8px;cursor:pointer;color:var(--text)}
+    .catalog-menu{display:flex;gap:8px;padding:10px 0;flex-wrap:wrap;margin-bottom:10px}
+    .ctg-btn{background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:10px;cursor:pointer}
+    .ctg-btn.active{background:linear-gradient(90deg,#232323,#2b2b2b);box-shadow:0 4px 18px rgba(0,0,0,0.6)}
+    .search-row{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+    .search-row input[type="text"]{padding:10px 12px;border-radius:10px;background:#121212;color:#fff;width:300px}
+    .search-row select{padding:10px;border-radius:10px;background:#121212;color:#fff}
+    .search-row .city-btn{padding:10px 12px;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer}
+    .products-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+    .card{background:var(--card);border-radius:var(--radius);padding:12px;transition:transform .18s ease, box-shadow .18s ease;box-shadow:0 6px 18px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:8px;position:relative;}
+    .card:hover{transform:translateY(-6px)}
+    .card img{width:100%;height:160px;object-fit:cover;border-radius:8px;}
+    .card h3{margin:0;font-size:15px}
+    .meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
+    .price{font-weight:700;color:var(--text)}
+    .add-btn{margin-top:auto;padding:10px;border-radius:10px;background:var(--accent);cursor:pointer;color:#fff;border:0}
+    .badge{position:absolute;left:12px;top:12px;padding:6px 8px;border-radius:8px;font-weight:700;background:#ff4d4d}
+    .heart{position:absolute;right:12px;top:12px;background:rgba(0,0,0,0.35);padding:6px;border-radius:8px;cursor:pointer;user-select:none}
+    .compare-chk{position:absolute;right:12px;bottom:12px;background:rgba(255,255,255,0.03);padding:6px;border-radius:8px;cursor:pointer}
+    .floating-ws{position:fixed;right:18px;bottom:18px;background:#25D366;color:#fff;padding:12px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,0.3);cursor:pointer;z-index:200;font-weight:700}
+    .toolbar{display:flex;gap:8px;align-items:center}
+    .banner{width:100%;height:160px;border-radius:12px;overflow:hidden;margin-bottom:12px;position:relative}
+    .banner img{width:100%;height:100%;object-fit:cover;display:block}
+    .banner-controls{position:absolute;left:12px;bottom:12px;display:flex;gap:8px}
+    .small-btn{padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.03);cursor:pointer;color:var(--text)}
+    .modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.66);display:flex;align-items:center;justify-content:center;z-index:120;backdrop-filter:blur(4px);padding:20px;display:none}
+    .modal-box{width:100%;max-width:480px;background:#121212;border-radius:12px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,0.7)}
+    .modal-box img{width:100%;height:220px;object-fit:cover;border-radius:8px}
+    .modal-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .pay button{flex:1;padding:10px;border-radius:8px;border:0;cursor:pointer}
+    .kaspi{background:#ff4d4d;color:#fff}
+    .halyk{background:#1fa83a;color:#fff}
+    .rassrochka{background:#ffb54d;color:#111}
+    .close-x{background:transparent;border:0;color:var(--muted);font-weight:700;cursor:pointer}
+    .cart-count{background:#ff4d4d;padding:4px 8px;border-radius:999px;font-weight:700;color:#fff;margin-left:6px}
+    .cart-list{max-height:320px;overflow:auto;margin:8px 0;padding:6px;display:flex;flex-direction:column;gap:8px}
+    .cart-item{display:flex;gap:8px;align-items:center;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px}
+    .cart-item img{width:60px;height:46px;object-fit:cover;border-radius:6px}
+    .total-row{display:flex;justify-content:space-between;margin-top:8px;font-weight:700;font-size:16px}
+    .admin-badge{background:#222;padding:6px 8px;border-radius:8px;color:var(--muted);font-size:13px}
+    .user-pill{background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:999px}
+    .empty-note{padding:24px;background:rgba(255,255,255,0.02);border-radius:12px;color:var(--muted)}
+    @media (max-width:520px){
+      .search-row input[type="text"]{width:100%}
+      .modal-box img{height:180px}
+      .banner{height:120px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div class="logo">
+          <span id="brand">nursundetavto.shina</span>
+          <span class="phone">+7 (771) 148-63-93</span>
+        </div>
+        <div class="admin-badge" title="Admin quick">Admin</div>
+      </div>
+
+      <div class="controls">
+        <div class="toolbar">
+          <button id="themeToggle" class="small-btn">🌙</button>
+          <button id="favoritesOpen" class="small-btn">♥ Избранное</button>
+          <button id="compareOpen" class="small-btn">≡ Сравнить</button>
+          <div id="userArea" class="user-pill">Гость</div>
+        </div>
+        <div class="menu">
+          <button id="catalogBtn" class="small-btn">Каталог</button>
+          <button id="cartBtn" class="small-btn">Корзина <span id="cartCount" class="cart-count" style="display:none">0</span></button>
+        </div>
+      </div>
+    </header>
+
+    <div class="banner" id="banner">
+      <img id="bannerImg" src="https://images.satu.kz/174089139_w640_h640_gruzovaya-shina-bridgestone.jpg" alt="banner">
+      <div class="banner-controls">
+        <button id="prevBanner" class="small-btn">◀</button>
+        <button id="nextBanner" class="small-btn">▶</button>
+      </div>
+    </div>
+
+    <div class="catalog-menu" id="catalogMenu">
+      <button class="ctg-btn active" data-category="zimnyi">❄ Зимние шины</button>
+      <button class="ctg-btn" data-category="letnyi">☀ Летние шины</button>
+      <button class="ctg-btn" data-category="sport">🏁 Спортивные</button>
+      <button class="ctg-btn" data-category="disk">⚙ Диски</button>
+      <button class="ctg-btn" data-category="offroad">🛻 Offroad</button>
+    </div>
+
+    <div class="search-row">
+      <input type="text" id="searchInput" placeholder="Шина немесе диск атауын енгізіңіз..." />
+      <select id="sizeFilter" aria-label="Өлшем">
+        <option value="">— Өлшем —</option>
+        <option>R16</option><option>R17</option><option>R18</option><option>R19</option><option>R20</option>
+      </select>
+
+      <select id="priceFilter" aria-label="Баға">
+        <option value="">— Баға —</option>
+        <option value="30000-40000">30k — 40k</option>
+        <option value="40000-50000">40k — 50k</option>
+        <option value="100000-150000">100k — 150k</option>
+        <option value="100000-200000">100k — 200k (диски)</option>
+      </select>
+
+      <button id="cityOpen" class="city-btn">Қала: <span id="currentCity">Алматы</span></button>
+      <button id="adminOpen" class="small-btn">🛠 Админ</button>
+    </div>
+
+    <main>
+      <div id="productsContainer" class="products-grid" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <!-- Floating WhatsApp -->
+  <div id="waBtn" class="floating-ws" title="Заказать в WhatsApp">WA</div>
+
+  <!-- City modal -->
+  <div id="cityModal" class="modal-back" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <h3>Қалаңызды таңдаңыз</h3>
+      <select id="citySelect" style="width:100%;padding:10px;border-radius:8px;background:#0f0f10;color:#fff;margin-top:8px">
+        <option>Алматы</option><option>Астана (Елорда)</option><option>Шымкент</option><option>Қарағанды</option><option>Атырау</option><option>Ақтөбе</option><option>Павлодар</option><option>Өскемен</option><option>Семей</option><option>Қызылорда</option><option>Орал (Уральск)</option><option>Қостанай</option><option>Ақтау</option><option>Көкшетау</option><option>Тараз</option><option>Түркістан</option><option>Балқаш</option><option>Жезқазған</option><option>Рудный</option><option>Екібастұз</option>
+      </select>
+      <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+        <button id="cityConfirm" class="small-btn">OK</button>
+        <button id="cityCancel" class="small-btn">Жабу</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product modal -->
+  <div id="productModal" class="modal-back" style="align-items:flex-start;padding-top:36px" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 id="prodTitle">Тауар</h3>
+        <button id="closeProd" class="close-x">✕</button>
+      </div>
+      <img id="prodImg" src="" alt="">
+      <div style="margin-top:8px">
+        <p id="prodDesc" style="color:var(--muted);margin:6px 0"></p>
+        <div class="modal-row">
+          <div style="min-width:90px">
+            <div style="font-size:13px;color:var(--muted)">Өлшем</div>
+            <div id="prodSize">R17</div>
+          </div>
+          <div style="min-width:90px">
+            <div style="font-size:13px;color:var(--muted)">Ел</div>
+            <div id="prodCountry">Japan</div>
+          </div>
+          <div style="min-width:90px">
+            <div style="font-size:13px;color:var(--muted)">Бағасы</div>
+            <div id="prodPrice" class="price">45 000 ₸</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px" class="pay">
+          <button id="addToCartBtn" class="add-btn">Корзинаға қосу</button>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="kaspi">Kaspi QR</button>
+            <button class="halyk">Halyk QR</button>
+            <button class="rassrochka">Рассрочка 0-0-12</button>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <h4>Пікірлер</h4>
+          <div id="reviewsList" style="max-height:160px;overflow:auto;padding:6px;background:rgba(255,255,255,0.02);border-radius:8px"></div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <input id="revAuthor" placeholder="Атыңыз" style="flex:1;padding:8px;border-radius:8px;background:#0f0f11;color:#fff">
+            <input id="revText" placeholder="Пікір" style="flex:2;padding:8px;border-radius:8px;background:#0f0f11;color:#fff">
+            <button id="addReviewBtn" class="small-btn">Жіберу</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart modal -->
+  <div id="cartModal" class="modal-back" style="align-items:flex-start;padding-top:36px" role="dialog" aria-modal="true">
+    <div class="modal-box" style="max-width:560px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3>Сіздің корзинаңыз</h3>
+        <button id="closeCart" class="close-x">✕</button>
+      </div>
+
+      <div id="cartItems" class="cart-list"></div>
+
+      <div class="total-row">
+        <div>Жалпы:</div>
+        <div id="totalPrice">0 ₸</div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+        <button id="orderBtn" class="small-btn">Тапсырыс жасау</button>
+        <button id="clearCart" class="small-btn">Барлығын тазалау</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compare modal -->
+  <div id="compareModal" class="modal-back" role="dialog" aria-modal="true">
+    <div class="modal-box" style="max-width:700px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3>Салыстыру</h3>
+        <button id="closeCompare" class="close-x">✕</button>
+      </div>
+      <div id="compareList" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    </div>
+  </div>
+
+  <!-- Favorites modal -->
+  <div id="favModal" class="modal-back" role="dialog" aria-modal="true">
+    <div class="modal-box" style="max-width:560px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3>Избранное</h3>
+        <button id="closeFav" class="close-x">✕</button>
+      </div>
+      <div id="favList" class="cart-list"></div>
+    </div>
+  </div>
+
+  <!-- Admin modal -->
+  <div id="adminModal" class="modal-back" role="dialog" aria-modal="true">
+    <div class="modal-box" style="max-width:560px">
+      <h3>Admin — Тауар қосу</h3>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <input id="admTitle" placeholder="Атауы" style="padding:8px;border-radius:8px;background:#0f0f11;color:#fff">
+        <input id="admImg" placeholder="Image URL" style="padding:8px;border-radius:8px;background:#0f0f11;color:#fff">
+        <input id="admPrice" placeholder="Бағасы" type="number" style="padding:8px;border-radius:8px;background:#0f0f11;color:#fff">
+        <select id="admType" style="padding:8px;border-radius:8px;background:#0f0f11;color:#fff">
+          <option value="zimnyi">zimnyi</option><option value="letnyi">letnyi</option><option value="sport">sport</option><option value="disk">disk</option><option value="offroad">offroad</option>
+        </select>
+        <button id="admAdd" class="small-btn">Қосу</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ===========================
+       Data + Helper functions
+       =========================== */
+    const zimnyi = [
+      "https://altraauto.kz/media/product/fsz5KQxHeDbuFFJbjcVGgb5BnSexZPF7_170x150.png",
+      "https://volgograd.virbacavto.ru/upload/resize_cache/iblock/f5d/1auahlet81b3non1oplfgjm0y036ve07/320_240_0/ikon_tyres_autograph_ice_9_suv.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtNRRqCUTNUFHOK-9543hhkq8Inm3RFlGmMaApx-modQOB79oYpghb84gfTt_iUROqcCQ&usqp=CAU"
+    ];
+    const letnyi = [
+      "https://volgograd.vsekolesa.ru/uploads/product/363/4-T608x0.jpg.webp",
+      "https://storage.66shin.ru/pictures/70518/pilot-sport-5-large.jpg"
+    ];
+    const sport = [
+      "https://m.ua/jpg_zoom1/807700.jpg",
+      "https://a.d-cd.net/LgAAAgMJUuA-960.jpg"
+    ];
+    const disk = [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4GHgdXCc2MVwisZDpxwPhsG5gnDJiqVw9sA&s",
+      "https://ro-sa.ru/netcat_files/multifile/2118/d93c6eab9a7e11ecb00ef4034357ec9f_002f8cf79c5011ecb00ef4034357ec9f.jpg"
+    ];
+    const offroad = [
+      "https://cdn.motor1.com/images/mgl/0ANyL/s1/off-road-tire.jpg"
+    ];
+
+    function randomPrice(type){
+      if(type==="zimnyi") return Math.floor(Math.random()*(50000-40000)+40000);
+      if(type==="letnyi") return Math.floor(Math.random()*(40000-30000)+30000);
+      if(type==="sport") return Math.floor(Math.random()*(150000-100000)+100000);
+      if(type==="disk") return Math.floor(Math.random()*(200000-100000)+100000);
+      if(type==="offroad") return Math.floor(Math.random()*(80000-60000)+60000);
+      return 50000;
+    }
+    function randomSize(){ const sizes=["R16","R17","R18","R19","R20"]; return sizes[Math.floor(Math.random()*sizes.length)]; }
+    function randomCountry(){ const countries=["Japan","Germany","Korea","Russia","USA","Turkey"]; return countries[Math.floor(Math.random()*countries.length)]; }
+    function formatPrice(n){ return n.toLocaleString('ru-RU') + " ₸"; }
+
+    /* ===========================
+       State
+       =========================== */
+    let state = {
+      category:'zimnyi', products:[], cart:[], filters:{q:'', size:'', priceRange:''},
+      city: localStorage.getItem('city') || 'Алматы', lang:'kz',
+      favorites: JSON.parse(localStorage.getItem('fav_v1')||'[]'),
+      compare: JSON.parse(localStorage.getItem('cmp_v1')||'[]'),
+      user: localStorage.getItem('user_name') || '',
+      banners: [
+        "https://images.satu.kz/174089139_w640_h640_gruzovaya-shina-bridgestone.jpg",
+        "https://tirepro.kz/upload/iblock/10e/10ea07228e165fa78bb989ec5f685df7.jpg",
+        "https://resources.cdn-kaspi.kz/img/m/p/pf2/pe7/9811196.jpeg?format=gallery-large"
+      ],
+      bannerIndex:0
+    };
+
+    /* ===========================
+       Build products (persisted + generated)
+       =========================== */
+    function buildProducts(){
+      const map = { zimnyi, letnyi, sport, disk, offroad };
+      const all = [];
+      Object.keys(map).forEach(key=>{
+        const arr = map[key];
+        arr.forEach((src,i)=>{
+          const id = `${key}-${i}`;
+          all.push({ id, type:key, title: `${key.toUpperCase()} #${i+1}`, img:src, size: randomSize(), country: randomCountry(), price: randomPrice(key), description: `Жоғары сапалы ${key} — сенімді және төзімді.`, sale: Math.random() < 0.25 });
+        });
+      });
+      // merge with saved custom products
+      const saved = JSON.parse(localStorage.getItem('products_v1')||'null');
+      if(saved && Array.isArray(saved)){
+        // ensure ids unique: prepend saved
+        saved.forEach(p=> all.unshift(p));
+      }
+      state.products = all;
+    }
+    buildProducts();
+
+    /* ===========================
+       Filters & Render
+       =========================== */
+    function getFilteredProducts(){
+      const q = state.filters.q.trim().toLowerCase();
+      const size = state.filters.size;
+      const priceRange = state.filters.priceRange;
+      const cat = state.category;
+      return state.products.filter(p=>{
+        if(p.type !== cat) return false;
+        if(q && !p.title.toLowerCase().includes(q) && !p.description.toLowerCase().includes(q)) return false;
+        if(size && p.size !== size) return false;
+        if(priceRange){
+          const [min,max] = priceRange.split('-').map(Number);
+          if(!(p.price >= min && p.price <= max)) return false;
+        }
+        return true;
+      });
+    }
+
+    function renderProducts(){
+      const container = document.getElementById('productsContainer');
+      const prods = getFilteredProducts();
+      if(prods.length === 0){
+        container.innerHTML = `<div class="empty-note">Өнім табылған жоқ.</div>`;
+        return;
+      }
+      container.innerHTML = prods.map(p=>`
+        <div class="card" data-id="${p.id}">
+            ${p.sale ? '<div class="badge">SALE</div>' : ''}
+            <div class="heart" data-id="${p.id}" title="Избранное">${state.favorites.includes(p.id) ? '♥' : '♡'}</div>
+            <img src="${p.img}" alt="${p.title}">
+            <h3>${p.title}</h3>
+            <div class="meta">
+                <div style="font-size:13px">${p.size} • ${p.country}</div>
+                <div class="price">${formatPrice(p.price)}</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+                <button class="add-btn" data-id="${p.id}">Сипаттама / Қосу</button>
+                <div class="compare-chk"><label style="display:flex;align-items:center;gap:6px"><input type="checkbox" data-id="${p.id}" ${state.compare.includes(p.id)?'checked':''}/> С</label></div>
+            </div>
+        </div>
+      `).join('');
+    }
+
+    /* ===========================
+       Cart functions
+       =========================== */
+    function saveCart(){ localStorage.setItem('cart_v1', JSON.stringify(state.cart)); }
+    function loadCart(){ const s = localStorage.getItem('cart_v1'); if(s) state.cart = JSON.parse(s); }
+    function addToCart(prod, qty=1){ const found = state.cart.find(c=>c.id===prod.id); if(found){ found.qty += qty; } else state.cart.push({ id:prod.id, title:prod.title, price:prod.price, qty:qty, img:prod.img }); saveCart(); renderCartCount(); }
+    function removeFromCart(id){ state.cart = state.cart.filter(c=>c.id !== id); saveCart(); }
+    function changeQty(id, qty){ const it = state.cart.find(c=>c.id===id); if(!it) return; it.qty = Math.max(1, qty); saveCart(); }
+    function clearCart(){ state.cart = []; saveCart(); }
+    function getCartTotal(){ return state.cart.reduce((s,i)=> s + (i.price * i.qty), 0); }
+    function renderCartCount(){ const el = document.getElementById('cartCount'); const totalItems = state.cart.reduce((s,i)=> s + i.qty, 0); if(totalItems > 0){ el.style.display = 'inline-block'; el.textContent = totalItems; } else el.style.display = 'none'; }
+
+    function showCartModal(){
+      const modal = document.getElementById('cartModal');
+      const itemsBox = document.getElementById('cartItems');
+      if(state.cart.length === 0){
+        itemsBox.innerHTML = `<div class="empty-note">Корзина бос.</div>`;
+      } else {
+        itemsBox.innerHTML = state.cart.map(it=>`
+          <div class="cart-item" data-id="${it.id}">
+            <img src="${it.img}" alt="">
+            <div style="flex:1">
+              <div class="title">${it.title}</div>
+              <div style="color:var(--muted);font-size:13px">${formatPrice(it.price)}</div>
+            </div>
+            <div class="qty" style="display:flex;align-items:center;gap:6px">
+              <button class="small-btn dec" data-id="${it.id}">−</button>
+              <div style="min-width:28px;text-align:center">${it.qty}</div>
+              <button class="small-btn inc" data-id="${it.id}">+</button>
+              <button class="small-btn remove" data-id="${it.id}" style="margin-left:6px">🗑</button>
+            </div>
+          </div>
+        `).join('');
+      }
+      document.getElementById('totalPrice').textContent = formatPrice(getCartTotal());
+      modal.style.display = 'flex';
+
+      // add handlers
+      itemsBox.querySelectorAll('.inc').forEach(b=> b.onclick = ()=>{ changeQty(b.dataset.id, findQty(b.dataset.id)+1); showCartModal(); renderCartCount(); });
+      itemsBox.querySelectorAll('.dec').forEach(b=> b.onclick = ()=>{ changeQty(b.dataset.id, Math.max(1, findQty(b.dataset.id)-1)); showCartModal(); renderCartCount(); });
+      itemsBox.querySelectorAll('.remove').forEach(b=> b.onclick = ()=>{ removeFromCart(b.dataset.id); showCartModal(); renderCartCount(); });
+    }
+    function findQty(id){ const it = state.cart.find(c=>c.id===id); return it? it.qty : 0; }
+
+    /* ===========================
+       Product modal + reviews
+       =========================== */
+    let currentProduct = null;
+    function openProductModal(prodId){
+      const p = state.products.find(x=>x.id===prodId);
+      if(!p) return;
+      currentProduct = p;
+      document.getElementById('prodTitle').textContent = p.title;
+      document.getElementById('prodImg').src = p.img;
+      document.getElementById('prodDesc').textContent = p.description;
+      document.getElementById('prodSize').textContent = p.size;
+      document.getElementById('prodCountry').textContent = p.country;
+      document.getElementById('prodPrice').textContent = formatPrice(p.price);
+      renderReviews(p.id);
+      document.getElementById('productModal').style.display = 'flex';
+    }
+
+    function addReview(prodId, author, text){
+      if(!author || !text) return;
+      const key = 'reviews_v1';
+      const all = JSON.parse(localStorage.getItem(key)||'{}');
+      if(!all[prodId]) all[prodId] = [];
+      all[prodId].push({author, text, date: new Date().toISOString()});
+      localStorage.setItem(key, JSON.stringify(all));
+      renderReviews(prodId);
+    }
+    function renderReviews(prodId){
+      const key = 'reviews_v1';
+      const all = JSON.parse(localStorage.getItem(key)||'{}');
+      const list = document.getElementById('reviewsList');
+      const arr = all[prodId] || [];
+      if(arr.length === 0) list.innerHTML = `<div style="color:var(--muted)">Пікірлер жоқ.</div>`;
+      else list.innerHTML = arr.map(r=>`<div style="padding:6px;border-bottom:1px solid rgba(255,255,255,0.02)"><strong>${r.author}</strong> <div style="color:var(--muted);font-size:12px">${new Date(r.date).toLocaleString()}</div><div>${r.text}</div></div>`).join('');
+    }
+
+    /* ===========================
+       Favorites & Compare
+       =========================== */
+    function saveFav(){ localStorage.setItem('fav_v1', JSON.stringify(state.favorites)); }
+    function saveCmp(){ localStorage.setItem('cmp_v1', JSON.stringify(state.compare)); }
+
+    function toggleFavorite(id){
+      if(state.favorites.includes(id)) state.favorites = state.favorites.filter(x=>x!==id);
+      else state.favorites.push(id);
+      saveFav();
+      renderProducts();
+    }
+
+    function showFavModal(){
+      const modal = document.getElementById('favModal');
+      const list = document.getElementById('favList');
+      if(state.favorites.length === 0){
+        list.innerHTML = `<div class="empty-note">Избранное пусто.</div>`;
+      } else {
+        const items = state.favorites.map(fid=>{
+          const p = state.products.find(x=>x.id===fid);
+          if(!p) return '';
+          return `<div class="cart-item" data-id="${p.id}">
+              <img src="${p.img}" alt="">
+              <div style="flex:1"><div class="title">${p.title}</div><div style="color:var(--muted);font-size:13px">${formatPrice(p.price)}</div></div>
+              <div><button class="small-btn fav-remove" data-id="${p.id}">🗑</button></div>
+          </div>`;
+        }).join('');
+        list.innerHTML = items;
+        list.querySelectorAll('.fav-remove').forEach(b=> b.onclick = ()=>{ state.favorites = state.favorites.filter(x=>x!==b.dataset.id); saveFav(); showFavModal(); renderProducts(); });
+      }
+      modal.style.display = 'flex';
+    }
+
+    function showCompareModal(){
+      const modal = document.getElementById('compareModal');
+      const list = document.getElementById('compareList');
+      if(state.compare.length === 0){
+        list.innerHTML = `<div class="empty-note">Список сравнения пуст.</div>`;
+      } else {
+        list.innerHTML = state.compare.map(id=>{
+          const p = state.products.find(x=>x.id===id);
+          if(!p) return '';
+          return `<div style="flex:1;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px">
+              <img src="${p.img}" style="width:100%;height:120px;object-fit:cover;border-radius:6px"><h4>${p.title}</h4>
+              <div>${p.size} • ${p.country}</div><div style="font-weight:700">${formatPrice(p.price)}</div>
+          </div>`;
+        }).join('');
+      }
+      modal.style.display = 'flex';
+    }
+
+    /* ===========================
+       Admin: add product
+       =========================== */
+    function openAdminModal(){ document.getElementById('adminModal').style.display = 'flex'; }
+    function addAdminProduct(){
+      const title = document.getElementById('admTitle').value.trim();
+      const img = document.getElementById('admImg').value.trim();
+      const price = Number(document.getElementById('admPrice').value) || 0;
+      const type = document.getElementById('admType').value;
+      if(!title || !img || !price) { alert('Барлық өрістерді толтырыңыз'); return; }
+      const id = 'custom-' + Date.now();
+      const p = { id, type, title, img, size: randomSize(), country: 'Custom', price, description: 'Админнан қосылған тауар', sale: false };
+      // save to persisted products list
+      const saved = JSON.parse(localStorage.getItem('products_v1')||'[]');
+      saved.unshift(p);
+      localStorage.setItem('products_v1', JSON.stringify(saved));
+      buildProducts(); renderProducts();
+      document.getElementById('adminModal').style.display = 'none';
+      // clear admin inputs
+      document.getElementById('admTitle').value = '';
+      document.getElementById('admImg').value = '';
+      document.getElementById('admPrice').value = '';
+    }
+
+    /* ===========================
+       Theme / User / Banner / WA
+       =========================== */
+    function toggleTheme(){
+      document.body.classList.toggle('light');
+      const btn = document.getElementById('themeToggle');
+      btn.textContent = document.body.classList.contains('light') ? '☀' : '🌙';
+    }
+    function loginPrompt(){
+      const name = prompt('Атыңызды енгізіңіз (жоқ па — Гость):', state.user || '');
+      state.user = name || '';
+      localStorage.setItem('user_name', state.user);
+      renderUser();
+    }
+    function renderUser(){ document.getElementById('userArea').textContent = state.user ? state.user : 'Гость'; }
+
+    function cycleBanner(next=true){
+      state.bannerIndex = (state.bannerIndex + (next?1:-1) + state.banners.length) % state.banners.length;
+      document.getElementById('bannerImg').src = state.banners[state.bannerIndex];
+    }
+
+    function openWhatsAppOrder(){
+      if(state.cart.length === 0){ alert('Корзина бос — алдымен тауар қосыңыз'); return; }
+      const lines = state.cart.map(i=>`${i.title} x${i.qty} — ${formatPrice(i.price)}`);
+      const total = formatPrice(getCartTotal());
+      const msg = `Сәлем, тапсырыс:%0A${lines.join('%0A')}%0AЖалпы: ${total}%0AҚала: ${state.city}%0AАты: ${state.user || '—'}`;
+      const phone = '7' + '7711486393'; // shop number
+      const url = `https://wa.me/${phone}?text=${msg}`;
+      window.open(url, '_blank');
+    }
+
+    /* ===========================
+       Event wiring (delegation where useful)
+       =========================== */
+    document.addEventListener('click', function(e){
+      // delegated product open
+      if(e.target.closest('.add-btn')){
+        const id = e.target.closest('.add-btn').dataset.id;
+        if(id){ openProductModal(id); return; }
+      }
+
+      // heart toggle (favorite)
+      if(e.target.closest('.heart')){
+        const id = e.target.closest('.heart').dataset.id;
+        if(id){ toggleFavorite(id); return; }
+      }
+
+      // compare checkbox toggle
+      if(e.target.matches('.compare-chk input')){
+        const id = e.target.dataset.id;
+        if(e.target.checked){
+          if(!state.compare.includes(id)) state.compare.push(id);
+        } else {
+          state.compare = state.compare.filter(x=>x!==id);
+        }
+        saveCmp();
+        return;
+      }
+
+      // favorites open
+      if(e.target.id === 'favoritesOpen'){ showFavModal(); return; }
+      // compare open
+      if(e.target.id === 'compareOpen'){ showCompareModal(); return; }
+      // close compare/fav
+      if(e.target.id === 'closeCompare'){ document.getElementById('compareModal').style.display = 'none'; return; }
+      if(e.target.id === 'closeFav'){ document.getElementById('favModal').style.display = 'none'; return; }
+
+      // admin open/add
+      if(e.target.id === 'adminOpen'){ openAdminModal(); return; }
+      if(e.target.id === 'admAdd'){ addAdminProduct(); return; }
+
+      // theme toggle
+      if(e.target.id === 'themeToggle'){ toggleTheme(); return; }
+
+      // user login
+      if(e.target.id === 'userArea'){ loginPrompt(); return; }
+
+      // WA button
+      if(e.target.id === 'waBtn'){ openWhatsAppOrder(); return; }
+
+      // banner controls
+      if(e.target.id === 'prevBanner'){ cycleBanner(false); return; }
+      if(e.target.id === 'nextBanner'){ cycleBanner(true); return; }
+
+      // product modal add to cart
+      if(e.target.id === 'addToCartBtn'){
+        if(!currentProduct) return;
+        addToCart(currentProduct,1);
+        document.getElementById('productModal').style.display = 'none';
+        currentProduct = null;
+        renderCartCount();
+        alert('Тауар корзинаға қосылды');
+        return;
+      }
+
+      // cart open
+      if(e.target.id === 'cartBtn'){ loadCart(); renderCartCount(); showCartModal(); return; }
+      if(e.target.id === 'closeCart'){ document.getElementById('cartModal').style.display = 'none'; return; }
+
+      // order from cart modal
+      if(e.target.id === 'orderBtn'){ document.getElementById('cartModal').style.display = 'none'; openWhatsAppOrder(); return; }
+      if(e.target.id === 'clearCart'){ if(confirm('Корзинаны тазалап тастағыңыз келе ме?')){ clearCart(); showCartModal(); renderCartCount(); } return; }
+
+      // close product modal
+      if(e.target.id === 'closeProd'){ document.getElementById('productModal').style.display = 'none'; currentProduct = null; return; }
+
+      // modal background click close (handled below via click on .modal-back)
+    });
+
+    // card compare checkboxes: since inputs created dynamically, use delegated change
+    document.addEventListener('change', function(e){
+      if(e.target.matches('.compare-chk input')){
+        const id = e.target.dataset.id;
+        if(e.target.checked){
+          if(!state.compare.includes(id)) state.compare.push(id);
+        } else {
+          state.compare = state.compare.filter(x=>x!==id);
+        }
+        saveCmp();
+      }
+    });
+
+    // cart modal delegated buttons (inc/dec/remove)
+    document.addEventListener('click', function(e){
+      if(e.target.matches('.inc')){ changeQty(e.target.dataset.id, findQty(e.target.dataset.id)+1); showCartModal(); renderCartCount(); }
+      if(e.target.matches('.dec')){ changeQty(e.target.dataset.id, Math.max(1, findQty(e.target.dataset.id)-1)); showCartModal(); renderCartCount(); }
+      if(e.target.matches('.remove')){ removeFromCart(e.target.dataset.id); showCartModal(); renderCartCount(); }
+    });
+
+    // reviews: submit
+    document.getElementById('addReviewBtn').addEventListener('click', ()=>{
+      const a = document.getElementById('revAuthor').value.trim() || (state.user || 'Аноним');
+      const t = document.getElementById('revText').value.trim();
+      if(!t){ alert('Пікір жаз'); return; }
+      if(!currentProduct){ alert('Алдымен тауарды ашыңыз'); return; }
+      addReview(currentProduct.id, a, t);
+      document.getElementById('revText').value='';
+      document.getElementById('revAuthor').value='';
+    });
+
+    // city modal open/close
+    document.getElementById('cityOpen').addEventListener('click', ()=>{ document.getElementById('cityModal').style.display = 'flex'; document.getElementById('citySelect').value = state.city; });
+    document.getElementById('cityConfirm').addEventListener('click', ()=>{ const c = document.getElementById('citySelect').value; state.city = c; localStorage.setItem('city', c); document.getElementById('currentCity').textContent = c; document.getElementById('cityModal').style.display = 'none'; });
+    document.getElementById('cityCancel').addEventListener('click', ()=>{ document.getElementById('cityModal').style.display = 'none'; });
+
+    // close modals by clicking on backdrop
+    document.querySelectorAll('.modal-back').forEach(m=>{
+      m.addEventListener('click', function(e){
+        if(e.target === this){
+          this.style.display = 'none';
+          currentProduct = null;
+        }
+      });
+    });
+
+    // Escape key closes modals
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ document.querySelectorAll('.modal-back').forEach(m=> m.style.display = 'none'); currentProduct = null; } });
+
+    // inputs: search/filters
+    document.getElementById('searchInput').addEventListener('input', (e)=>{ state.filters.q = e.target.value; renderProducts(); });
+    document.getElementById('sizeFilter').addEventListener('change', (e)=>{ state.filters.size = e.target.value; renderProducts(); });
+    document.getElementById('priceFilter').addEventListener('change', (e)=>{ state.filters.priceRange = e.target.value; renderProducts(); });
+
+    // banner auto rotate
+    setInterval(()=> { cycleBanner(true); }, 6000);
+
+    // wire up category buttons (they exist statically)
+    document.querySelectorAll('.ctg-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        document.querySelectorAll('.ctg-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        state.category = btn.dataset.category;
+        renderProducts();
+      });
+    });
+
+    // initial cart load + render
+    loadCart();
+    document.getElementById('currentCity').textContent = state.city;
+    renderCartCount();
+    renderProducts();
+    renderUser();
+  </script>
+</body>
+</html>
